@@ -1,22 +1,15 @@
+import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import {SafeAreaView, ScrollView, useColorScheme} from 'react-native';
-
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {SafeAreaView} from 'react-native';
+import RootStack from './src/navigation/StackNavigator';
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}
-      />
-    </SafeAreaView>
+    <NavigationContainer>
+      <SafeAreaView>
+        <RootStack />
+      </SafeAreaView>
+    </NavigationContainer>
   );
 };
 
