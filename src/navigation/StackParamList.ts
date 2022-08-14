@@ -1,4 +1,4 @@
 export type StackParamList = {
   HomeScreen: undefined;
-  ProfileScreen: undefined;
+  ProfileScreen: {login: string};
 };

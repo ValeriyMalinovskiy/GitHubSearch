@@ -1,12 +1,14 @@
 import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import {SafeAreaView} from 'react-native';
+import {SafeAreaView, ViewStyle} from 'react-native';
 import RootStack from './src/navigation/StackNavigator';
+
+const mainStyle: ViewStyle = {flex: 1};
 
 const App = () => {
   return (
     <NavigationContainer>
-      <SafeAreaView>
+      <SafeAreaView style={mainStyle}>
         <RootStack />
       </SafeAreaView>
     </NavigationContainer>

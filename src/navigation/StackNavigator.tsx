@@ -1,17 +1,55 @@
-import React, * as react from 'react';
+import React, {FC} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {StackParamList} from './StackParamList';
 import Home from '../components/home';
 import ProfileScreen from '../components/profile-screen';
+import {GestureResponderEvent, Text, TouchableOpacity} from 'react-native';
+import {TStackNavProp} from './NavigationProps';
+import {useRoute} from '@react-navigation/native';
+import {StackParamList} from './StackParamList';
 
-const Root = createNativeStackNavigator<StackParamList>();
+const Stack = createNativeStackNavigator<StackParamList>();
 
-const RootStack: react.FC = () => {
+const Back = ({navigation}: {navigation: TStackNavProp}) => {
+  const route = useRoute();
+  const {name} = route;
+  let goBack: (event: GestureResponderEvent) => void = () => {};
+  switch (name) {
+    case 'ProfileScreen': {
+      goBack = () => navigation.navigate('HomeScreen');
+      break;
+    }
+    default: {
+      return <></>;
+    }
+  }
   return (
-    <Root.Navigator>
-      <Root.Screen name="HomeScreen" component={Home} />
-      <Root.Screen name="ProfileScreen" component={ProfileScreen} />
-    </Root.Navigator>
+    <TouchableOpacity onPress={goBack}>
+      <Text>←</Text>
+    </TouchableOpacity>
+  );
+};
+
+const RootStack: FC = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="HomeScreen"
+      screenOptions={({navigation}) => {
+        return {headerLeft: () => <Back navigation={navigation} />};
+      }}>
+      <Stack.Screen
+        name="HomeScreen"
+        component={Home}
+        options={{title: 'GitHub Searcher', headerTitleAlign: 'center'}}
+      />
+      <Stack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={({route}) => ({
+          title: route.params.login,
+          headerTitleAlign: 'center',
+        })}
+      />
+    </Stack.Navigator>
   );
 };
 
