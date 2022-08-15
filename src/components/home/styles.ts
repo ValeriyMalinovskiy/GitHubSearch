@@ -1,19 +1,28 @@
 import {StyleSheet} from 'react-native';
 
-const sampleSpacing = 10;
+const flexSample = {flex: 1};
+const spacingMedium = 10;
 const photoWidth = 70;
 const photoHeight = 50;
+const searchHeight = 45;
+const spacingThin = 3;
 
 const createStyleSheet = (width: number) => {
-  const textSectionWidth = width - photoWidth - sampleSpacing * 3;
+  const textSectionWidth = width - photoWidth - spacingMedium * 3;
   return StyleSheet.create({
-    main: {flex: 1},
+    main: {
+      ...flexSample,
+      justifyContent: 'space-between',
+    },
     rowContainer: {
       flexDirection: 'row',
-      marginHorizontal: sampleSpacing,
-      marginTop: 3,
+      marginHorizontal: spacingMedium,
+      marginBottom: spacingThin,
       backgroundColor: 'white',
       alignItems: 'center',
+    },
+    firstItem: {
+      marginTop: spacingThin,
     },
     mainInfo: {
       flexDirection: 'row',
@@ -23,11 +32,11 @@ const createStyleSheet = (width: number) => {
     reposContainer: {
       width: textSectionWidth * 0.3,
       textAlign: 'left',
-      marginRight: sampleSpacing,
+      marginRight: spacingMedium,
     },
     loginContainer: {
       width: textSectionWidth * 0.7,
-      marginLeft: sampleSpacing * 2,
+      marginLeft: spacingMedium * 2,
     },
     text: {
       color: 'black',
@@ -36,10 +45,24 @@ const createStyleSheet = (width: number) => {
     avatarImage: {
       height: photoHeight,
       width: photoWidth,
-      marginVertical: sampleSpacing * 0.5,
     },
-    list: {
-      marginBottom: sampleSpacing * 0.5,
+    searchBar: {
+      ...flexSample,
+      borderColor: 'grey',
+      borderWidth: 1,
+      borderRadius: 1,
+      padding: spacingThin,
+      color: 'black',
+    },
+    searchBarContainer: {
+      width,
+      height: searchHeight + spacingMedium * 2,
+      backgroundColor: 'white',
+      padding: spacingMedium * 2,
+    },
+    activityContainer: {...flexSample, justifyContent: 'center'},
+    listContainer: {
+      ...flexSample,
     },
   });
 };

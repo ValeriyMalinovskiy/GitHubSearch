@@ -1,11 +1,12 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {FC, useCallback} from 'react';
+import React, {FC} from 'react';
 import {
   ActivityIndicator,
   FlatList,
   Image,
   ListRenderItem,
   Text,
+  TextInput,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -17,21 +18,17 @@ import createStyleSheet from './styles';
 
 const Home: FC = () => {
   const navigation = useNavigation<TStackNavProp>();
-  const {usersMain, loading} = useHomeScreen();
+  const {usersMain, loading, goToProfileScreen, input, setInput} =
+    useHomeScreen(navigation);
   const {width} = useWindowDimensions();
   const styles = createStyleSheet(width);
 
-  const goToProfileScreen = useCallback(
-    (userMainInfo: IUser) => () =>
-      navigation.navigate('ProfileScreen', {login: userMainInfo.login}),
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
-
-  const renderItem: ListRenderItem<IUser> = ({item}) => {
+  const renderItem: ListRenderItem<IUser> = ({item, index}) => {
     const openProfile = goToProfileScreen(item);
     return (
-      <TouchableOpacity style={styles.rowContainer} onPress={openProfile}>
+      <TouchableOpacity
+        style={[styles.rowContainer, !index ? styles.firstItem : {}]}
+        onPress={openProfile}>
         <Image style={styles.avatarImage} source={{uri: item.avatar_url}} />
         <View style={styles.mainInfo}>
           <View style={styles.loginContainer}>
@@ -52,10 +49,23 @@ const Home: FC = () => {
 
   return (
     <View style={styles.main}>
+      <View style={styles.searchBarContainer}>
+        <TextInput
+          style={styles.searchBar}
+          autoCapitalize="none"
+          autoComplete="off"
+          autoCorrect={false}
+          placeholder="Search for Users"
+          onChangeText={setInput}
+          value={input}
+        />
+      </View>
       {loading ? (
-        <ActivityIndicator />
+        <View style={styles.activityContainer}>
+          <ActivityIndicator size={'large'} />
+        </View>
       ) : (
-        <View style={styles.list}>
+        <View style={styles.listContainer}>
           <FlatList
             data={usersMain}
             renderItem={renderItem}

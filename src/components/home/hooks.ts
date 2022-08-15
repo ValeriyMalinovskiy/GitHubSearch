@@ -1,11 +1,20 @@
-import {useState} from 'react';
+import {useCallback, useState} from 'react';
 import {useAsyncEffect} from 'use-async-effect';
 import {getAllUsers, getUserRepos} from '../../api/requestHandler';
+import {TStackNavProp} from '../../navigation/NavigationProps';
 import {IUser} from '../../types';
 
-const useHomeScreen = () => {
+const useHomeScreen = (navigation: TStackNavProp) => {
   const [usersMain, setUsersMain] = useState<IUser[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [input, setInput] = useState<string>('');
+
+  const goToProfileScreen = useCallback(
+    (userMainInfo: IUser) => () =>
+      navigation.navigate('ProfileScreen', {login: userMainInfo.login}),
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   useAsyncEffect(async () => {
     setLoading(true);
@@ -40,7 +49,7 @@ const useHomeScreen = () => {
     }
   }, []);
 
-  return {usersMain, loading};
+  return {usersMain, loading, goToProfileScreen, input, setInput};
 };
 
 export default useHomeScreen;
