@@ -6,7 +6,6 @@ import {
   Image,
   ListRenderItem,
   Text,
-  TextInput,
   TouchableOpacity,
   useWindowDimensions,
   View,
@@ -14,11 +13,12 @@ import {
 import {TStackNavProp} from '../../navigation/NavigationProps';
 import {IUser} from '../../types';
 import useHomeScreen from './hooks';
+import SearchBar from './search-bar';
 import createStyleSheet from './styles';
 
 const Home: FC = () => {
   const navigation = useNavigation<TStackNavProp>();
-  const {usersMain, loading, goToProfileScreen, input, setInput} =
+  const {users, setUsers, loading, goToProfileScreen} =
     useHomeScreen(navigation);
   const {width} = useWindowDimensions();
   const styles = createStyleSheet(width);
@@ -37,10 +37,12 @@ const Home: FC = () => {
             </Text>
           </View>
           <View style={styles.reposContainer}>
-            <Text
-              style={styles.text}
-              numberOfLines={1}
-              ellipsizeMode="tail">{`Repo: ${item.public_repos}`}</Text>
+            {!!item.public_repos && (
+              <Text
+                style={styles.text}
+                numberOfLines={1}
+                ellipsizeMode="tail">{`Repo: ${item.public_repos}`}</Text>
+            )}
           </View>
         </View>
       </TouchableOpacity>
@@ -49,17 +51,7 @@ const Home: FC = () => {
 
   return (
     <View style={styles.main}>
-      <View style={styles.searchBarContainer}>
-        <TextInput
-          style={styles.searchBar}
-          autoCapitalize="none"
-          autoComplete="off"
-          autoCorrect={false}
-          placeholder="Search for Users"
-          onChangeText={setInput}
-          value={input}
-        />
-      </View>
+      <SearchBar setUsers={setUsers} />
       {loading ? (
         <View style={styles.activityContainer}>
           <ActivityIndicator size={'large'} />
@@ -67,7 +59,7 @@ const Home: FC = () => {
       ) : (
         <View style={styles.listContainer}>
           <FlatList
-            data={usersMain}
+            data={users}
             renderItem={renderItem}
             keyExtractor={item => item.login}
           />

@@ -1,11 +1,8 @@
 import {StyleSheet} from 'react-native';
+import {flexSample, spacingMedium, spacingThin} from '../styles/consts';
 
-const flexSample = {flex: 1};
-const spacingMedium = 10;
 const photoWidth = 70;
 const photoHeight = 50;
-const searchHeight = 45;
-const spacingThin = 3;
 
 const createStyleSheet = (width: number) => {
   const textSectionWidth = width - photoWidth - spacingMedium * 3;
@@ -45,20 +42,6 @@ const createStyleSheet = (width: number) => {
     avatarImage: {
       height: photoHeight,
       width: photoWidth,
-    },
-    searchBar: {
-      ...flexSample,
-      borderColor: 'grey',
-      borderWidth: 1,
-      borderRadius: 1,
-      padding: spacingThin,
-      color: 'black',
-    },
-    searchBarContainer: {
-      width,
-      height: searchHeight + spacingMedium * 2,
-      backgroundColor: 'white',
-      padding: spacingMedium * 2,
     },
     activityContainer: {...flexSample, justifyContent: 'center'},
     listContainer: {

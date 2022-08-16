@@ -4,10 +4,22 @@ import {getAllUsers, getUserRepos} from '../../api/requestHandler';
 import {TStackNavProp} from '../../navigation/NavigationProps';
 import {IUser} from '../../types';
 
+const loadRepos = async (iUsers: IUser[]) => {
+  const queue = iUsers.map(u => getUserRepos(u.login));
+  const iRepos = await Promise.all(queue);
+  const mappedResults = iUsers.map(user => {
+    const userRepos =
+      iRepos.filter(
+        repoArr => repoArr && user.login === repoArr[0]?.owner?.login,
+      )[0] || [];
+    return {...user, public_repos: userRepos.length, repos: userRepos};
+  });
+  return mappedResults;
+};
+
 const useHomeScreen = (navigation: TStackNavProp) => {
-  const [usersMain, setUsersMain] = useState<IUser[]>([]);
+  const [users, setUsers] = useState<IUser[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [input, setInput] = useState<string>('');
 
   const goToProfileScreen = useCallback(
     (userMainInfo: IUser) => () =>
@@ -17,30 +29,13 @@ const useHomeScreen = (navigation: TStackNavProp) => {
   );
 
   useAsyncEffect(async () => {
+    console.log('running useAsyncEff');
     setLoading(true);
     try {
       const iUsers = await getAllUsers();
       if (iUsers) {
-        const queue = iUsers.map(u => getUserRepos(u.login));
-        const iRepos = await Promise.all(queue);
-        const usersMainInfoArr = iUsers.map(user => {
-          const userRepos =
-            iRepos.filter(
-              repoArr => repoArr && user.login === repoArr[0]?.owner?.login,
-            )[0] || [];
-          return {
-            avatar_url: user.avatar_url,
-            email: user.email,
-            location: user.location,
-            login: user.login,
-            created_at: user.created_at,
-            followers: user.followers,
-            following: user.following,
-            public_repos: userRepos.length,
-            repos: userRepos,
-          };
-        });
-        setUsersMain(usersMainInfoArr);
+        const usersMainInfoArr = await loadRepos(iUsers);
+        setUsers(usersMainInfoArr);
       }
     } catch (err) {
       console.error('Error on retrieving data', err);
@@ -49,7 +44,7 @@ const useHomeScreen = (navigation: TStackNavProp) => {
     }
   }, []);
 
-  return {usersMain, loading, goToProfileScreen, input, setInput};
+  return {users, loading, goToProfileScreen, setUsers};
 };
 
 export default useHomeScreen;

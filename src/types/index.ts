@@ -1,3 +1,5 @@
+import {Dispatch, SetStateAction} from 'react';
+
 export interface ILicense {
   key: string;
   name: string;
@@ -130,6 +132,16 @@ export interface IUser {
   created_at: string;
   followers: number;
   following: number;
-  repos?: IRepo[];
   public_repos: number;
+  repos?: IRepo[];
+}
+
+export interface IUserResults {
+  total_count: number;
+  incomplete_results: boolean;
+  items: IUserFull[];
+}
+
+export interface ISearchBarProps {
+  setUsers: Dispatch<SetStateAction<IUser[]>>;
 }
