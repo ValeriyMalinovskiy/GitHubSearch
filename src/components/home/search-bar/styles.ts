@@ -1,5 +1,9 @@
 import {StyleSheet} from 'react-native';
-import {flexSample, spacingMedium, spacingThin} from '../../styles/consts';
+import {
+  flexSample,
+  spacingMedium,
+  spacingThin,
+} from '../../reusable/styles/consts';
 
 const searchHeight = 45;
 

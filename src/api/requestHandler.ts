@@ -1,5 +1,5 @@
 import axios, {AxiosRequestConfig} from 'axios';
-import {IRepo, IUserFull, IUserResults} from '../types';
+import {IRepo, IUserFull, IUserResults} from '../components/reusable/types';
 
 const gitHubApiUrl = 'https://api.github.com';
 

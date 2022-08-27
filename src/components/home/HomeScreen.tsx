@@ -11,15 +11,23 @@ import {
   View,
 } from 'react-native';
 import {TStackNavProp} from '../../navigation/NavigationProps';
-import {IUser} from '../../types';
+import {useLoading} from '../reusable/hooks';
+import {IUser} from '../reusable/types';
 import useHomeScreen from './hooks';
-import SearchBar from './search-bar';
+import SearchBar from './search-bar/Search';
 import createStyleSheet from './styles';
 
 const Home: FC = () => {
   const navigation = useNavigation<TStackNavProp>();
-  const {users, setUsers, loading, goToProfileScreen} =
-    useHomeScreen(navigation);
+  const {setLoading, loading} = useLoading();
+  const {
+    defaultUsers,
+    goToProfileScreen,
+    searchResults,
+    setSearchResults,
+    setShowResults,
+    showResults,
+  } = useHomeScreen(navigation, setLoading);
   const {width} = useWindowDimensions();
   const styles = createStyleSheet(width);
 
@@ -51,7 +59,10 @@ const Home: FC = () => {
 
   return (
     <View style={styles.main}>
-      <SearchBar setUsers={setUsers} />
+      <SearchBar
+        setSearchResults={setSearchResults}
+        setShowResults={setShowResults}
+      />
       {loading ? (
         <View style={styles.activityContainer}>
           <ActivityIndicator size={'large'} />
@@ -59,7 +70,7 @@ const Home: FC = () => {
       ) : (
         <View style={styles.listContainer}>
           <FlatList
-            data={users}
+            data={showResults ? searchResults : defaultUsers}
             renderItem={renderItem}
             keyExtractor={item => item.login}
           />

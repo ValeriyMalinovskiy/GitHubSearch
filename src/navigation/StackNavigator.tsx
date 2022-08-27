@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Home from '../components/home';
-import ProfileScreen from '../components/profile-screen';
+import Home from '../components/home/HomeScreen';
+import ProfileScreen from '../components/profile-screen/ProfileScreen';
 import {GestureResponderEvent, Text, TouchableOpacity} from 'react-native';
 import {TStackNavProp} from './NavigationProps';
 import {useRoute} from '@react-navigation/native';

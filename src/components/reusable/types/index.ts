@@ -143,5 +143,6 @@ export interface IUserResults {
 }
 
 export interface ISearchBarProps {
-  setUsers: Dispatch<SetStateAction<IUser[]>>;
+  setSearchResults: Dispatch<SetStateAction<IUser[]>>;
+  setShowResults: Dispatch<SetStateAction<boolean>>;
 }

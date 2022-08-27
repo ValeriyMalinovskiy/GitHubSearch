@@ -1,5 +1,9 @@
 import {StyleSheet} from 'react-native';
-import {flexSample, spacingMedium, spacingThin} from '../styles/consts';
+import {
+  flexSample,
+  spacingMedium,
+  spacingThin,
+} from '../reusable/styles/consts';
 
 const photoWidth = 70;
 const photoHeight = 50;

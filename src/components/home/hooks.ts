@@ -1,25 +1,17 @@
-import {useCallback, useState} from 'react';
+import {Dispatch, SetStateAction, useCallback, useState} from 'react';
 import {useAsyncEffect} from 'use-async-effect';
-import {getAllUsers, getUserRepos} from '../../api/requestHandler';
+import {getAllUsers} from '../../api/requestHandler';
 import {TStackNavProp} from '../../navigation/NavigationProps';
-import {IUser} from '../../types';
+import {IUser} from '../reusable/types';
+import {loadRepos} from '../reusable/helpers';
 
-const loadRepos = async (iUsers: IUser[]) => {
-  const queue = iUsers.map(u => getUserRepos(u.login));
-  const iRepos = await Promise.all(queue);
-  const mappedResults = iUsers.map(user => {
-    const userRepos =
-      iRepos.filter(
-        repoArr => repoArr && user.login === repoArr[0]?.owner?.login,
-      )[0] || [];
-    return {...user, public_repos: userRepos.length, repos: userRepos};
-  });
-  return mappedResults;
-};
-
-const useHomeScreen = (navigation: TStackNavProp) => {
-  const [users, setUsers] = useState<IUser[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+const useHomeScreen = (
+  navigation: TStackNavProp,
+  setLoading: Dispatch<SetStateAction<boolean>>,
+) => {
+  const [defaultUsers, setDefaultUsers] = useState<IUser[]>([]);
+  const [searchResults, setSearchResults] = useState<IUser[]>([]);
+  const [showResults, setShowResults] = useState<boolean>(false);
 
   const goToProfileScreen = useCallback(
     (userMainInfo: IUser) => () =>
@@ -29,13 +21,12 @@ const useHomeScreen = (navigation: TStackNavProp) => {
   );
 
   useAsyncEffect(async () => {
-    console.log('running useAsyncEff');
     setLoading(true);
     try {
       const iUsers = await getAllUsers();
       if (iUsers) {
         const usersMainInfoArr = await loadRepos(iUsers);
-        setUsers(usersMainInfoArr);
+        setDefaultUsers(usersMainInfoArr);
       }
     } catch (err) {
       console.error('Error on retrieving data', err);
@@ -44,7 +35,14 @@ const useHomeScreen = (navigation: TStackNavProp) => {
     }
   }, []);
 
-  return {users, loading, goToProfileScreen, setUsers};
+  return {
+    defaultUsers,
+    goToProfileScreen,
+    searchResults,
+    setSearchResults,
+    setShowResults,
+    showResults,
+  };
 };
 
 export default useHomeScreen;
